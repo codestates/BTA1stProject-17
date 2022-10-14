@@ -1,0 +1,27 @@
+{
+  "name": "hedera_hashtag",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@harmony-js/core": "^0.1.57",
+    "@harmony-js/crypto": "^0.1.56",
+    "@harmony-js/utils": "^0.1.56",
+    "@hashgraph/sdk": "^2.18.3",
+    "bech32-converting": "^1.0.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "request": "^2.88.2",
+    "scrypt-shim": "0.0.1-security",
+    "tslib": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
