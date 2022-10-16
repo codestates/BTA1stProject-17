@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const aes256 = require('../utils/aes');
 
 const {
     AccountBalanceQuery,
@@ -44,9 +45,9 @@ client.setOperator(myAccountId, myPrivateKey);
  */
 router.use((req, res, next) => {
     const walletData = db.get('wallet').value();
-    console.log(walletData);
+    // console.log(walletData);
     if (walletData.hash) {
-        console.log(walletData.hash);
+        // console.log(walletData.hash);
         req.wallet = {
             hash: walletData.hash,
             access_time: walletData.access_time,
@@ -66,32 +67,20 @@ router.post('/makeNewWallet', async (req, res, next) => {
         const newAccountPrivateKey = await mnemonic.toEd25519PrivateKey();
         const newAccountPublicKey = newAccountPrivateKey.publicKey;
 
-        // const accountCreateTransactionResponse =
-        //     await new AccountCreateTransaction()
-        //         .setKey(newAccountPublicKey)
-        //         .setInitialBalance(Hbar.fromTinybars(1000))
-        //         .execute(client);
+        const accountCreateTransactionResponse =
+            await new AccountCreateTransaction()
+                .setKey(newAccountPublicKey)
+                .setInitialBalance(Hbar.fromTinybars(1000))
+                .execute(client);
 
-        // const accountCreateTransactionReceipt =
-        //     await accountCreateTransactionResponse.getReceipt(client);
-        // const newAccountId = accountCreateTransactionReceipt.accountId; // 어드레스 역할 같음
-        // console.log(newAccountId);
+        const accountCreateTransactionReceipt =
+            await accountCreateTransactionResponse.getReceipt(client);
+        const newAccountId = accountCreateTransactionReceipt.accountId;
 
         const hashedPwd = await hash(params.password);
         const hashedMnemonic = await hash(mnemonic.toString());
         const hashedAll = await hash(hashedMnemonic, hashedPwd);
-        // console.log(`hashedPwd :: ${hashedPwd}`);
-        // console.log(`hashedMnemonic :: ${hashedMnemonic}`);
-        // console.log(`hashedAll :: ${hashedAll}`);
-        // console.log(
-        //     await hash(
-        //         '65572a449885e1b47f3f6c86f6a2f37d67409b4ea7977653bdb6988d57e804b5',
-        //         '26406eac16210b4a099cc5993f7c659624e65591ee002e159b61646dec6387b8'
-        //     )
-        // );
-        // console.log(
-        //     '54a99592cc0ca590eef7668fd3b4c3036eff26716156d9c58bc872ee88405bed'
-        // );
+
         saveHashCode(hashedMnemonic, hashedAll);
 
         console.log('======== make New Wallet End ===========');
@@ -112,7 +101,6 @@ router.post('/makeNewWallet', async (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
-    // console.clear();
     if (!req.body.password)
         res.status(500).json({ message: 'not invalid password' });
 
@@ -128,51 +116,6 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-// router.post('/newMnemonic', async (req, res, next) => {
-//     try {
-//         const params = req.body;
-//         const key = process.env.GENERATE_PWD;
-//         console.log(`key : ${key}`);
-//         console.log(params);
-//         if (!params.password) throw new Error('비번 없음');
-//         const mnemonic = await makeNewMnemonic();
-//         const newAccountPrivateKey = await mnemonic.toEd25519PrivateKey(key);
-//         console.log(newAccountPrivateKey.toString());
-//         res.json({
-//             message: 'ok',
-//             data: {
-//                 mnemonic: mnemonic.toString(),
-//                 privateKey: newAccountPrivateKey.toString(),
-//             },
-//         });
-//     } catch (err) {
-//         res.status(500);
-//         res.json({ message: err.message });
-//     }
-// });
-
-// router.post('/cryptoTest', async (req, res, next) => {
-//     const asd = await saveHashCode(
-//         '1ce03fcb1f929a4c038310fc7c551b88aa4cadc3c29cee7b23de8b17f42827e7'
-//     );
-//     const hashValue = await hash(req.body.password);
-//     const walletData = await getHashCode();
-//     if (!walletData) res.send('not hashed');
-//     // console.log(walletData);
-//     // res.send(hashValue);
-// });
-
-// router.post('/insertTest', async (req, res, next) => {
-//     db.get('table1')
-//         .push({
-//             name: req.body.name,
-//             age: req.body.age,
-//         })
-//         .write();
-//     console.log(req.body);
-//     res.send('insertTest');
-// });
-
 router.post('/restore-vault', async (req, res, next) => {
     const { mnemonic, password } = req.body;
     // const mnemonic = req.body.mnemonic;
@@ -182,6 +125,14 @@ router.post('/restore-vault', async (req, res, next) => {
         mnemonic: mnemonic,
         password: password,
     });
+});
+
+router.post('/aestest', (req, res, next) => {
+    const encrypt = aes256.encrypt(req.body.password);
+    // console.log(encrypt);
+    const decrypt = aes256.decrypt(encrypt);
+    // console.log(decrypt);
+    res.send(decrypt);
 });
 
 router.use((err, req, res, next) => {
@@ -207,37 +158,7 @@ const getHashCode = async () => {
 };
 
 const saveHashCode = async (hashedMnemonic, hash) => {
-    // console.clear();
     if (!hash || !hashedMnemonic) throw new Error('not invalid hash');
-    // let hashCode = await getHashCode();
-
-    // if (
-    //     hashCode.hash &&
-    //     typeof hashCode.hash == 'string' &&
-    //     hashCode.hash.length == 64
-    // ) {
-    //     // todo) 저장된 해시를 수정
-    //     console.log('수정');
-    //     const result = db
-    //         .get('wallet')
-    //         .assign({
-    //             hash: hash,
-    //             access_time: ((Date.now() / 1000) | 0) + 3600,
-    //         })
-    //         .write();
-    //     console.log(result);
-    // } else {
-    //     // todo) 저장된 해시 값이 없으므로 새로 추가
-    //     console.log('추가');
-    //     const result = db
-    //         .get('wallet')
-    //         .assign({
-    //             hash: hash,
-    //             access_time: ((Date.now() / 1000) | 0) + 3600,
-    //         })
-    //         .write();
-    //     console.log(result);
-    // }
 
     const response = db
         .get('wallet')
@@ -250,15 +171,13 @@ const saveHashCode = async (hashedMnemonic, hash) => {
     return response;
 };
 
+const saveHashCodeAES256 = async(hash);
+
 const compareHash = async (password) => {
     const walletData = db.get('wallet').value();
     const { hashedMnemonic, hash: walletHash } = walletData;
 
     const newHash = await hash(hashedMnemonic, await hash(password));
-
-    console.log(`walletHash :: ${walletHash}`);
-    console.log(`newHash :: ${newHash}`);
-    console.log(walletHash == newHash);
 
     if (walletHash == newHash) return true;
     return false;
