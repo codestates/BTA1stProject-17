@@ -1,16 +1,15 @@
 import axios from 'axios';
 import qs from 'qs';
 
-
 export interface CustomRequest {
-  pathParams?: {[key: string]: any};
-  queryParams?: {[key: string]: any};
-  data?: {[key: string]: any};
+  pathParams?: { [key: string]: any };
+  queryParams?: { [key: string]: any };
+  data?: { [key: string]: any };
 }
 
 export interface BaseQueryParam {
   path: string;
-  method: 'get' | 'post' | 'put' | 'delete'
+  method: 'get' | 'post' | 'put' | 'delete';
   request?: CustomRequest;
   errorMessage?: string;
 }
@@ -18,7 +17,8 @@ export interface BaseQueryParam {
 export async function baseQuery({ path, method, request, errorMessage }: BaseQueryParam) {
   const { pathParams, queryParams, data: requestData } = request ?? {};
 
-  const queryString = queryParams ? `?${qs.stringify(queryParams)}` : '';
+  const queryString = queryParams ? `?${qs.stringify(queryParams, { allowDots: true })}` : '';
+  console.log(queryString);
   if (pathParams) {
     path = insertPathParams(path, pathParams);
   }
@@ -34,15 +34,14 @@ export async function baseQuery({ path, method, request, errorMessage }: BaseQue
 
 const axiosInstance = (() => {
   const instance = axios.create({
-    baseURL: process.env.API_URL
-  })
+    baseURL: process.env.API_URL,
+  });
   return instance;
 })();
 
-
-const insertPathParams = (path: string, pathParams: {[key: string]: string}) => {
+const insertPathParams = (path: string, pathParams: { [key: string]: string }) => {
   Object.entries(pathParams).forEach(([key, value]) => {
     path = path.replace(`{${key}}`, value);
-  })
+  });
   return path;
-}
+};

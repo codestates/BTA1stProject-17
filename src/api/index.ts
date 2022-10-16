@@ -5,32 +5,36 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery,
   endpoints: builder => ({
-    get: builder.query<any,  CustomRequest>({
-      query: ({ pathParams, queryParams, data}) => ({
-        path: '/posts/{postNo}',
+    getAccounts: builder.query<any, CustomRequest>({
+      query: ({ queryParams }) => ({
+        path: '/accounts',
         method: 'get',
         request: {
-          pathParams,
           queryParams,
-          data,
-        }
+        },
       }),
     }),
-    post: builder.mutation<any, CustomRequest>({
-      query: ({ pathParams, queryParams, data }) => ({
-        path: '/posts',
-        method: 'post',
+    getTransactions: builder.query<any, CustomRequest>({
+      query: ({ queryParams }) => ({
+        path: '/transactions',
+        method: 'get',
         request: {
-          pathParams,
           queryParams,
-          data,
-        }
+        },
       }),
     }),
+    // post: builder.mutation<any, CustomRequest>({
+    //   query: ({ pathParams, queryParams, data }) => ({
+    //     path: '/posts',
+    //     method: 'post',
+    //     request: {
+    //       pathParams,
+    //       queryParams,
+    //       data,
+    //     }
+    //   }),
+    // }),
   }),
 });
 
-export const {
-  useGetQuery,
-  usePostMutation,
-} = api;
+export const { useLazyGetAccountsQuery, useLazyGetTransactionsQuery } = api;

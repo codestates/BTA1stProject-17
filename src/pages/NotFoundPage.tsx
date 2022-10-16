@@ -1,9 +1,8 @@
+import { useLocation } from 'react-router-dom';
+
 function NotFoundPage() {
-  return (
-    <div>
-      낫 파운드
-    </div>
-  );
-};
+  const location = useLocation();
+  return <div>{location.pathname}</div>;
+}
 
 export default NotFoundPage;
