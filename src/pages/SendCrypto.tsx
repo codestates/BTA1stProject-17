@@ -8,6 +8,9 @@ import {ChangeEvent, useState} from 'react';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import theme from '@/styles/theme';
+import {Hbar, ScheduleCreateTransaction, ScheduleSignTransaction, TransferTransaction} from '@hashgraph/sdk';
+import {useAppSelector} from '@/app/store';
+import {BallTriangle} from 'react-loader-spinner';
 
 interface SendCryptoProps {
   
@@ -17,7 +20,10 @@ function SendCrypto({}: SendCryptoProps) {
   const [step, setStep] = useState<'INPUT' | 'CONFIRM'>('INPUT');
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState(0);
+  const [fee, setFee] = useState(0.0001); // transfer fee는 0.0001 달러
+  const { client, currentAccountId, accountKey } = useAppSelector(store => store.hedera);
+  const [isSending, setIsSending] = useState(false);
+  const [isSendingSuccess, setIsSendingSuccess] = useState(false);
 
   const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
@@ -35,6 +41,37 @@ function SendCrypto({}: SendCryptoProps) {
       setStep('CONFIRM');
       return;
     }
+    send();
+  }
+
+  const send = async() => {
+    if (!currentAccountId || !client || !accountKey) return;
+    try {
+      setIsSending(true);
+      const transferTransaction = new TransferTransaction()
+        .addHbarTransfer(currentAccountId, Hbar.fromTinybars(-amount))
+        .addHbarTransfer(address, Hbar.fromTinybars(amount))
+
+      const scheduledTransaction = new ScheduleCreateTransaction()
+        .setScheduledTransaction(transferTransaction)
+        .setScheduleMemo(new Date().toString()); // payerId를 제외한 모든 값이 같으면 이미 스케줄링된 트랜잭션이라고 응답이 온다.
+
+      const scheduledTransactionResponse = await scheduledTransaction.execute(client);
+
+      const scheduledTransactionReceipt = await scheduledTransactionResponse.getReceipt(client);
+      const scheduledTransactionScheduledId = scheduledTransactionReceipt.scheduleId;
+
+      const signTransaction = await new ScheduleSignTransaction()
+        .setScheduleId(scheduledTransactionScheduledId!)
+        .freezeWith(client)
+        .sign(accountKey.private)
+      const signTransactionResponse = await signTransaction.execute(client);
+      setIsSendingSuccess(true);
+    } catch (e) {
+      alert(e);
+    }
+    setIsSending(false)
+
   }
 
   return (
@@ -56,28 +93,38 @@ function SendCrypto({}: SendCryptoProps) {
                           type='number'
                           onChange={handleAmountChange}
                       />
-                      <span>HBAR</span>
+                      <span>tℏ</span>
                   </div>
                   <span> (유효성 검사가 아직 구현되지 않았습니다. 올바른 값을 입력해주세요.)</span>
 
               </div>
             : <div className='confirm-info'>
-                <p className='confirm-info-amount'>{amount} HBAR</p>
+                <p className='confirm-info-amount'>{amount} tℏ</p>
                 <img width={19} height={19} src='/assets/images/icon-arrow-gray.png'/>
                 <p className='confirm-info-address'>{address}</p>
                 <div className='confirm-info-fee-wrap'>
                   <div css={dividerCss}/>
                   <p className='confirm-info-fee'>
                     <span>네트워크 수수료</span>
-                    <span>{fee.toLocaleString()} HBAR</span>
+                    <span>${fee.toLocaleString('ko-KR', {maximumFractionDigits: 4})}</span>
                   </p>
                 </div>
               </div>
         }
       </div>
-      <Button onClick={handleBtnClick}>
-        { step === 'INPUT' ? 'Next' : 'Send' }
+      <Button onClick={handleBtnClick} disabled={isSending || isSendingSuccess}>
+      {
+        !isSending
+          ? !isSendingSuccess
+              ? step === 'INPUT'
+                ? 'Next'
+                : 'Send'
+              : 'Success'
+          : <BallTriangle ariaLabel="loading-indicator" color={theme.color.white} width={20} height={20} />
+        }
       </Button>
+
+
     </section>
   );
 };
