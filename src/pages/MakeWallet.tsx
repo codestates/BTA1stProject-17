@@ -47,8 +47,16 @@ function MakeWallet() {
   return (
     <section css={makeWalletSectionCss}>
       <div css={inputWrapCss}>
-        <Input value={password} onChange={handlePasswordChange} placeholder='비밀번호'/>
-        <Input value={passwordCheckValue} onChange={handlePasswordCheckValueChange} placeholder='비밀번호 확인'/>
+        <Input
+          value={password}
+          onChange={handlePasswordChange}
+          placeholder='비밀번호'
+          type='password'/>
+        <Input
+          value={passwordCheckValue}
+          onChange={handlePasswordCheckValueChange}
+          placeholder='비밀번호 확인'
+          type='password'/>
       </div>
       <Button onClick={handleMakeWalletBtnClick}>
         새로운 지갑 생성

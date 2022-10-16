@@ -48,6 +48,7 @@ const helpHeaderCss = (theme: Theme) => css`
     left: 20px;
     width: 12px;
     height: 21px;
+    cursor: pointer;
   }
 `;
 
@@ -62,7 +63,6 @@ const helpHeaderDescriptionSectionCss = (theme: Theme) => css`
   img {
     width: 120px;
     height: 120px;
-    fill: black;
   }
   p {
     display: flex;

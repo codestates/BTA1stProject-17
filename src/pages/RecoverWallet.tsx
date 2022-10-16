@@ -73,6 +73,7 @@ function RecoverWallet({}: RecoverWalletProps) {
                     key={inputOrder}
                     value={value}
                     onChange={(e) => handleMnemonicInputChange(e, lineOrder, inputOrder)}
+                    type='password'
                   />
                 )
               }

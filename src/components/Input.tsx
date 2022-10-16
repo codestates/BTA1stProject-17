@@ -9,12 +9,14 @@ function Input({ ...props }: InputProps) {
 }
 
 const inputCss = (theme: Theme) => css`
+  width: 100%;
   height: 50px;
   border: 1px solid ${theme.color.black400};
   border-radius: 10px;
   color: ${theme.color.white};
   padding: 0 12px;
   font-size: 16px;
+  box-sizing: border-box;
 
   &::placeholder {
     color: ${theme.color.black200};
