@@ -76,7 +76,7 @@ function Login() {
     <section css={loginSectionCss}>
       <div css={passwordInputWrapCss}>
         <Input value={password} onChange={handlePasswordChange} placeholder={'비밀번호'} type='password'/>
-        <Link className='recover-link' to={'/help/recover'}>비밀번호를 잊어버렸습니다.</Link>
+        <Link className='recover-link' to={'/help/recover'}>비밀번호를 잊어버렸습니다.(지갑 복구)</Link>
       </div>
       <Button onClick={handleOpenWalletBtnClick}>잠금 해제</Button>
     </section>
