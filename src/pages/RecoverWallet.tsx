@@ -6,6 +6,8 @@ import {ChangeEvent, useEffect, useState} from 'react';
 import {setHelpLayout} from '@/slices/helpLayoutSlice';
 import {css, Theme} from '@emotion/react';
 import cloneDeep from 'lodash.clonedeep'
+import {useNavigate} from 'react-router-dom';
+import Button from '@/components/Button';
 
 interface RecoverWalletProps {
   
@@ -16,6 +18,7 @@ const MAX_INPUT_COUNT_PER_LINE = 4;
 
 function RecoverWallet({}: RecoverWalletProps) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [inputLines, setInputLines] = useState<string[][]>(
     Array.from(
       {length: Math.ceil(INPUT_COUNT / MAX_INPUT_COUNT_PER_LINE)},
@@ -52,7 +55,8 @@ function RecoverWallet({}: RecoverWalletProps) {
   }
 
   const handleGetWalletBtnClick = () => {
-    validateMnemonic()
+    navigate('/check')
+    // validateMnemonic()
     // const mnemonicValue = getMnemonicValue();
   }
 
@@ -76,12 +80,11 @@ function RecoverWallet({}: RecoverWalletProps) {
           )
         }
       </div>
-      <button
-        css={getWalletBtnCss}
+      <Button
         onClick={handleGetWalletBtnClick}
       >
         지갑 가져오기
-      </button>
+      </Button>
     </section>
   );
 };
@@ -89,7 +92,7 @@ function RecoverWallet({}: RecoverWalletProps) {
 const recoverWalletSectionCss = css`
   width: 100%;
   height: 100%;
-  padding: 0 17px;
+  padding: 17px 17px 24px 17px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -126,24 +129,6 @@ const mnemonicInputCss = (theme: Theme) => css`
   color: ${theme.color.white};
 `
 
-const getWalletBtnCss = (theme: Theme) => css`
-  dispaly: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 50px;
-  border: none;
-  background-color: ${theme.color.black500};
-  border-radius: 5px;
-  
-  font-family: 'Inter-Medium';
-  font-size: 20px;
-  color: ${theme.color.white};
-  
-  &:hover {
-    background-color: ${theme.color.black400};
-  }
-`
 
 
 export default RecoverWallet;

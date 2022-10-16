@@ -65,7 +65,10 @@ const helpHeaderDescriptionSectionCss = (theme: Theme) => css`
     fill: black;
   }
   p {
-    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
     font-size: 20px;
     line-height: 30px;
     text-align: center;
