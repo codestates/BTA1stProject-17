@@ -12,6 +12,7 @@ import {decrypt} from '@/util/hash';
 import {Mnemonic} from '@hashgraph/sdk';
 import {setAccountIds, setAccountKey, setCurrentAccountId} from '@/slices/hederaSlice';
 import {useLazyGetAccountsQuery} from '@/api';
+import {setModal} from '@/slices/modalSlice';
 
 function Login() {
   const dispatch = useAppDispatch()
@@ -72,11 +73,17 @@ function Login() {
     navigate('/wallet');
   }
 
+  const handleExpireBtn = () => {
+    localStorage.removeItem('hashedMnemonic');
+    navigate('/');
+  };
+
   return (
     <section css={loginSectionCss}>
       <div css={passwordInputWrapCss}>
         <Input value={password} onChange={handlePasswordChange} placeholder={'비밀번호'} type='password'/>
         <Link className='recover-link' to={'/help/recover'}>비밀번호를 잊어버렸습니다.(지갑 복구)</Link>
+        <span className='expire' onClick={handleExpireBtn}>키 방출하기</span>
       </div>
       <Button onClick={handleOpenWalletBtnClick}>잠금 해제</Button>
     </section>
@@ -108,6 +115,16 @@ const passwordInputWrapCss = (theme: Theme) => css`
       color: ${theme.color.black100};
     }
   }
+  
+  .expire {
+    color: ${theme.color.black200};
+    cursor: pointer;
+    
+    &:hover {
+      color: ${theme.color.black100};
+    }
+  }
+  
 `
 
 
