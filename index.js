@@ -15,15 +15,9 @@ const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
 
-// Set default middlewares (logger, static, cors and no-cache)
 server.use(middlewares);
-server.use(jsonServer.bodyParser); // body 작성이 필요한 요청에 사용될 미들웨어
-/*-------------여기에 Custom 라우터를 작성해준다-------
-.
-.
-.
--------------------------------------------*/
-// Use default router
+server.use(jsonServer.bodyParser);
+
 server.use(router);
 
 server.listen(process.env.JSON_PORT || 5500, () => {
@@ -52,7 +46,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    // res.json(`${req.method}: ${req.url}`);
     if (req.wallet) {
         res.status(200);
         res.json({
