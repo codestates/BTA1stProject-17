@@ -4,6 +4,8 @@
 import {css, Theme} from '@emotion/react';
 import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
+import {useAppSelector} from '@/app/store';
+import {AccountBalanceQuery} from '@hashgraph/sdk';
 
 interface WalletProps {
   
@@ -14,13 +16,27 @@ type MenuType = 'TRANSACTIONS' | 'SEND';
 function Wallet({}: WalletProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { client, currentAccountId } = useAppSelector(store => store.hedera)
   const [currentMenu, setCurrentMenu] = useState<MenuType>('TRANSACTIONS');
+  const [balance, setBalance] = useState('0');
 
   useEffect(() => {
     if (location.pathname === '/wallet') {
       navigate('/wallet/transactions');
     }
   }, [])
+
+  useEffect(() => {
+    (async() => {
+      if (client && currentAccountId) {
+        const accountIdBalanceQuery = new AccountBalanceQuery()
+          .setAccountId(currentAccountId)
+        const { hbars } = await accountIdBalanceQuery.execute(client);
+        setBalance(hbars.toString());
+      }
+    })()
+  }, [client && currentAccountId])
+
 
   const handleMenuBtnClick = (type: MenuType) => {
     setCurrentMenu(type);
@@ -43,7 +59,7 @@ function Wallet({}: WalletProps) {
       <section css={coinBoardCss}>
         <figure css={hederaLogoWrapCss}/>
         <div css={coinAmountCss}>
-          <p className='amount'>100.09082 HBAR</p>
+          <p className='amount'>{balance}</p>
           <p className='description'>Hedera Hashgraph</p>
         </div>
         <div css={menuCss}>
@@ -66,7 +82,7 @@ function Wallet({}: WalletProps) {
       </main>
       <footer css={footerCss}>
         <p>
-          Account 1
+          {currentAccountId}
           <img width={14} height={7} src="/assets/images/icon-dropdown.png"/>
         </p>
       </footer>

@@ -27,7 +27,7 @@ function Transaction({ type, amount, target }: TransactionProps) {
           <span className="transaction-type"> {getLabel()}</span>
           <span className="transaction-amount">
             {amount > 0 ? '+' : ''}
-            {amount.toLocaleString()} HBAR
+            {amount.toLocaleString()} tℏ
           </span>
         </p>
         <p className="transaction-bottom">받는 곳: {target}</p>
