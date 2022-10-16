@@ -137,6 +137,7 @@ const accountsModalCss = (theme: Theme) => css`
 
   .expire {
     height: 30px;
+    cursor: pointer;
   }
 
   header {
