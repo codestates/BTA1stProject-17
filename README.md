@@ -1,4 +1,5 @@
 ## Hedera Hashtag
+<img width="624" alt="hht-banner" src="https://user-images.githubusercontent.com/67793530/196058706-85891a93-d184-4893-8ed4-3f0f4abd5096.png">
 
 ### 1. What is This ?
 ```shell
@@ -25,3 +26,7 @@ MY_PRIVATE_KEY={Hedera Portal 테스트넷 계정 PRIVATE_KEY}
 API_URL=https://testnet.mirrornode.hedera.com/api/v1
 SECRET_KEY={해시에 사용할 값}
 ```
+### 4. Useful Links
+- [Hedera Docs](https://docs.hedera.com/guides/) : 헤데라 공식 docs
+- [Hedera Portal](https://portal.hedera.com/) : 헤데라 테스트넷 계정 관리 페이지
+- [Hashscan](https://hashscan.io/) : 트랜잭션 탐색 페이지
