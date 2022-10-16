@@ -18,6 +18,11 @@ const style = css`
     src: url('/assets/fonts/Inter-Bold.ttf') format('truetype');
   }
 
+  @font-face {
+    font-family: 'Inter-Light';
+    src: url('/assets/fonts/Inter-Light.ttf') format('truetype');
+  }
+
   html,
   body,
   div,

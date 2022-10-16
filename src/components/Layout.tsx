@@ -11,6 +11,7 @@ function Layout() {
 }
 
 const layoutCss = (theme: Theme) => css`
+  position: relative;
   width: 400px;
   height: 600px;
   background-color: ${theme.color.black600};

@@ -9,6 +9,8 @@ import MakeWallet from '@/pages/MakeWallet';
 import RecoverWallet from '@/pages/RecoverWallet';
 import CheckMnemonic from '@/pages/CheckMnemonic';
 import HelpLayout from '@/components/HelpLayout';
+import Transactions from '@/pages/Transactions';
+import SendCrypto from '@/pages/SendCrypto';
 
 const Router = () => {
   return useRoutes([
@@ -20,6 +22,16 @@ const Router = () => {
         {
           path: '/wallet',
           element: <Wallet />,
+          children: [
+            {
+              path: 'transactions',
+              element: <Transactions />,
+            },
+            {
+              path: 'send',
+              element: <SendCrypto />,
+            },
+          ],
         },
         {
           path: '/help',
