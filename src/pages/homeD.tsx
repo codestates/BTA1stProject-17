@@ -1,6 +1,5 @@
 import {
   AccountBalanceQuery,
-  AccountCreateTransaction,
   Client,
   Hbar,
   Mnemonic,
@@ -12,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useLazyGetAccountsQuery, useLazyGetTransactionsQuery } from '@/api';
 
 function Home() {
-  /* eslint-disable  */
+  /* eslint-disable */
   const [client, setClient] = useState<Client | null>(null);
   const myAccountId = process.env.MY_ACCOUNT_ID!;
   const myPrivateKey = process.env.MY_PRIVATE_KEY!;
@@ -36,15 +35,15 @@ function Home() {
       const newAccountPrivateKey = await mnemonic.toEd25519PrivateKey(password);
       const newAccountPublicKey = newAccountPrivateKey.publicKey;
 
-      const accountCreateTransactionResponse1 = await new AccountCreateTransaction()
-        .setKey(newAccountPublicKey)
-        .setInitialBalance(Hbar.fromTinybars(1000))
-        .execute(client);
-      //
-      //
-      const accountCreateTransactionReceipt1 = await accountCreateTransactionResponse1.getReceipt(client);
+      // const accountCreateTransactionResponse1 = await new AccountCreateTransaction()
+      //   .setKey(newAccountPublicKey)
+      //   .setInitialBalance(Hbar.fromTinybars(1000))
+      //   .execute(client);
+      // //
+      // //
+      // const accountCreateTransactionReceipt1 = await accountCreateTransactionResponse1.getReceipt(client);
       // const record1 = await newAccount1.getRecord(client);
-      const newAccountId1 = accountCreateTransactionReceipt1.accountId; // 어드레스 역할 같음
+      // const newAccountId1 = accountCreateTransactionReceipt1.accountId; // 어드레스 역할 같음
       //
       // const newAccount2 = await new AccountCreateTransaction()
       //   .setKey(newAccountPublicKey)
@@ -56,7 +55,7 @@ function Home() {
 
       // const newAccountPrivateKey = '302e020100300506032b6570042204205403a84e50e5cf16a805b09f2435b592e0cd592ddea5f3ab792ddc5f74eb2b2d'
       // const newAccountPublicKey = '302a300506032b65700321002749addf326c163ea329fe175312a4ba2b4655529064624b21f665dceb212584';
-      // const newAccountId1 = '0.0.48625812';
+      const newAccountId1 = '0.0.48625812';
       const newAccountId2 = '0.0.48625813';
 
 

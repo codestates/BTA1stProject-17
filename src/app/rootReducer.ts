@@ -1,9 +1,9 @@
-import {combineReducers} from 'redux';
-import {api} from '@/api';
-import home from '@/components/homeD/homeSlice'
+import { combineReducers } from 'redux';
+import { api } from '@/api';
+import helpLayout from '@/slices/helpLayoutSlice';
 
 const rootReducer = combineReducers({
-  home,
+  helpLayout,
   [api.reducerPath]: api.reducer,
 });
 
