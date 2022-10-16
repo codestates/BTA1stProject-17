@@ -134,7 +134,8 @@ const hederaLogoWrapCss = (theme: Theme) => css`
 
 const walletMainCss = css`
   width: 100%;
-  height: 290px;
+  height: 294px;
+  overflow: auto;
 `
 
 const menuCss = css`
@@ -161,6 +162,8 @@ const footerCss = (theme: Theme) => css`
   height: 50px;
   width: 100%;
   background-color: ${theme.color.black500};
+  border-top: 3px solid ${theme.color.black300};
+  box-shadow: 0px -4px 10px 5px rgba(0, 0, 0, 0.25);
 
   p {
     display: flex;
