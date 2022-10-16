@@ -21,6 +21,7 @@ const MAX_INPUT_COUNT_PER_LINE = 4;
 function RecoverWallet({}: RecoverWalletProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [currentFocusedInputInfo, setCurrentFocusedInputInfo] = useState<[number, number]>([0, 0]);
   const [inputLines, setInputLines] = useState<string[][]>(
     Array.from(
       {length: Math.ceil(INPUT_COUNT / MAX_INPUT_COUNT_PER_LINE)},
@@ -49,6 +50,10 @@ function RecoverWallet({}: RecoverWalletProps) {
     return mnemonicInputValue;
   }
 
+  const handleMnemonicInputFocus = (lineOrder: number, inputOrder: number) => {
+    setCurrentFocusedInputInfo([lineOrder, inputOrder]);
+  }
+
   const handleMnemonicInputChange = (e: ChangeEvent<HTMLInputElement>, lineOrder: number,  inputOrder: number) => {
     const newInputLines = cloneDeep(inputLines);
     const value = e.currentTarget.value;
@@ -56,6 +61,13 @@ function RecoverWallet({}: RecoverWalletProps) {
     setInputLines(prev => newInputLines)
   }
 
+  const isCurrentFocusedInput = (lineOrder: number, inputOrder: number) => {
+    const [currentLineOrder, currentInputOrder] = currentFocusedInputInfo;
+    if (currentLineOrder === lineOrder && currentInputOrder === inputOrder) {
+      return true;
+    }
+    return false;
+  }
 
   const handleGetWalletBtnClick = async () => {
     if (!validateMnemonic()) return;
@@ -84,6 +96,8 @@ function RecoverWallet({}: RecoverWalletProps) {
                     key={inputOrder}
                     value={value}
                     onChange={(e) => handleMnemonicInputChange(e, lineOrder, inputOrder)}
+                    onFocus={() => handleMnemonicInputFocus(lineOrder, inputOrder)}
+                    type={isCurrentFocusedInput(lineOrder, inputOrder) ? undefined : 'password'}
                   />
                 )
               }
