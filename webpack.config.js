@@ -18,7 +18,11 @@ module.exports = {
     new ESLintPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new CopyWebpackPlugin({
-      patterns: [{ from: 'public/logo.png' }, { from: 'public/manifest.json' }],
+      patterns: [
+        { from: 'public/logo.png' },
+        { from: 'public/manifest.json' },
+        { from: 'public/assets', to: 'assets' },
+      ],
     }),
   ],
   devServer: {

@@ -7,7 +7,7 @@ import Help from '@/pages/Help';
 import Login from '@/pages/Login';
 import MakeWallet from '@/pages/MakeWallet';
 import RecoverWallet from '@/pages/RecoverWallet';
-import CheckNemonic from '@/pages/CheckNemonic';
+import CheckMnemonic from '@/pages/CheckMnemonic';
 import HelpLayout from '@/components/HelpLayout';
 
 const Router = () => {
@@ -40,7 +40,7 @@ const Router = () => {
             },
             {
               path: 'check',
-              element: <CheckNemonic />,
+              element: <CheckMnemonic />,
             },
           ],
         },

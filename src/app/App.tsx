@@ -4,7 +4,8 @@ import GlobalStyle from '@/styles/global';
 import theme from '@/styles/theme';
 import { Provider } from 'react-redux';
 import store from '@/app/store';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter as BrowserRouter } from 'react-router-dom';
+// import { BrowserRouter } from 'react-router-dom';
 import Router from '@/route';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Router />
         </BrowserRouter>
       </ThemeProvider>
+      {location.pathname}
     </Provider>
   );
 }

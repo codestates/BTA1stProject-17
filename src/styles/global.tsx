@@ -158,6 +158,11 @@ const style = css`
     background-color: rgba(0, 0, 0, 0);
   }
 
+  input {
+    background-color: rgba(0, 0, 0, 0);
+    outline: none;
+  }
+
   span {
     color: white;
   }
