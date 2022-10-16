@@ -120,7 +120,10 @@ function Wallet({}: WalletProps) {
       </main>
       <footer css={footerCss}>
         <p onClick={handleAccountListBtnClick}>
-          {currentAccountId}
+          {currentAccountId
+            ? currentAccountId
+            : '여기를 눌러서 계정을 새로고침 해야해요!'
+          }
           <img width={14} height={7} src="/assets/images/icon-dropdown.png"/>
         </p>
       </footer>

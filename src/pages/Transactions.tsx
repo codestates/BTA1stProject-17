@@ -98,6 +98,9 @@ function Transactions() {
           )
         })
       }
+      {
+        !isLoading && !transactions.length && '활동 내역이 없습니다.'
+      }
     </section>
   );
 };

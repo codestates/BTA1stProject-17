@@ -8,18 +8,35 @@ import {css, Theme} from '@emotion/react';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import {Link, useNavigate} from 'react-router-dom';
+import {decrypt} from '@/util/hash';
+import {Mnemonic} from '@hashgraph/sdk';
+import {setAccountIds, setAccountKey, setCurrentAccountId} from '@/slices/hederaSlice';
+import {useLazyGetAccountsQuery} from '@/api';
 
 function Login() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
+  const [getAccountsApi] = useLazyGetAccountsQuery();
 
   useEffect(() => {
     dispatch(setHelpLayout({ description: '비밀번호를 입력해주세요' }))
   }, [])
 
-  const validatePassword = () => {
-    // TODO: 니모닉 찾기
+  const getDecryptInfo = () => {
+    const hashedMnemonic = localStorage.getItem('hashedMnemonic');
+    if (!hashedMnemonic) {
+      alert('오류가 발생했습니다. 처음으로 돌아갑니다');
+      navigate('/');
+      return { isSuccess: false, value: null };
+    }
+    console.log(hashedMnemonic);
+    try {
+      const decryptInfo = decrypt(hashedMnemonic, password);
+      return decryptInfo;
+    } catch (e) {
+      return { isSuccess: false, value: null };
+    }
   }
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +44,31 @@ function Login() {
     setPassword(value);
   }
 
-  const handleOpenWalletBtnClick = () => {
-    // validatePassword();
+  const handleOpenWalletBtnClick = async() => {
+    const decryptInfo = getDecryptInfo();
+    if (!decryptInfo.isSuccess) {
+      alert('잘못된 비밀번호입니다.');
+      return;
+    }
+    const mnemonicString = decryptInfo.value;
+    console.log('mnemonic::', mnemonicString);
+    const mnemonic = await Mnemonic.fromString(mnemonicString!);
+    const accountPrivateKey = await mnemonic.toEd25519PrivateKey('1234');
+    const accountPublicKey = accountPrivateKey.publicKey;
+    dispatch(setAccountKey({ public: accountPublicKey, private: accountPrivateKey}));
+
+    const {
+      data: { accounts },
+    } = await getAccountsApi({
+      queryParams: {
+        account: {
+          publicKey: accountPublicKey.toString(),
+        },
+      },
+    });
+
+    dispatch(setAccountIds(accounts.map((e: any) => e.account)));
+    dispatch(setCurrentAccountId(accounts[0].account));
     navigate('/wallet');
   }
 

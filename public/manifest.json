@@ -6,7 +6,7 @@
   "icons": {
     "128": "logo.png"
   },
-  "permissions": [],
+  "permissions": ["storage"],
   "action": {
     "default_icon": "logo.png",
     "default_popup": "index.html"

@@ -8,6 +8,8 @@ import {css, Theme} from '@emotion/react';
 import cloneDeep from 'lodash.clonedeep'
 import {useNavigate} from 'react-router-dom';
 import Button from '@/components/Button';
+import {setAccountKey, setMnemonic} from '@/slices/hederaSlice';
+import {Mnemonic} from '@hashgraph/sdk';
 
 interface RecoverWalletProps {
   
@@ -43,7 +45,7 @@ function RecoverWallet({}: RecoverWalletProps) {
     const mnemonicInputValue = inputLines.reduce((acc, curr) => {
       acc = acc + ' ' + curr.map(value => value).join(' ')
       return acc;
-    }, '')
+    }, '').slice(1);
     return mnemonicInputValue;
   }
 
@@ -54,10 +56,19 @@ function RecoverWallet({}: RecoverWalletProps) {
     setInputLines(prev => newInputLines)
   }
 
-  const handleGetWalletBtnClick = () => {
-    navigate('/check')
-    // validateMnemonic()
-    // const mnemonicValue = getMnemonicValue();
+
+  const handleGetWalletBtnClick = async () => {
+    if (!validateMnemonic()) return;
+    const mnemonicValue = getMnemonicValue();
+    try {
+      await Mnemonic.fromString(mnemonicValue);
+      dispatch(setMnemonic(mnemonicValue));
+      navigate('/help/make?hasAlreadyWallet=true');
+    } catch (e) {
+      alert('정확한 니모닉 구문을 입력해주세요.');
+      console.error(e);
+    }
+
   }
 
   return (
@@ -73,7 +84,6 @@ function RecoverWallet({}: RecoverWalletProps) {
                     key={inputOrder}
                     value={value}
                     onChange={(e) => handleMnemonicInputChange(e, lineOrder, inputOrder)}
-                    type='password'
                   />
                 )
               }

@@ -1,21 +1,41 @@
 /** @jsxImportSource @emotion/react */
 // TODO: 작업 완료 후 린트 활성화
 /* eslint-disable */
-import {useAppDispatch} from '@/app/store';
+import {useAppDispatch, useAppSelector} from '@/app/store';
 import {useEffect, useState} from 'react';
 import {setHelpLayout} from '@/slices/helpLayoutSlice';
 import {css, Theme} from '@emotion/react';
 import Button from '@/components/Button';
 import {useNavigate} from 'react-router-dom';
+import {setAccountIds, setCurrentAccountId} from '@/slices/hederaSlice';
+import {useLazyGetAccountsQuery} from '@/api';
 
 function CheckMnemonic() {
+  console.log('here');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { mnemonic, accountKey } = useAppSelector(store => store.hedera);
   const [isMnemonicRevealed, setIsMnemonicRevealed] = useState(false);
+  const [getAccountsApi] = useLazyGetAccountsQuery();
 
   useEffect(() => {
-    dispatch(setHelpLayout({ description: '지갑이 생성되었어요!\n다음의 복구구문을 꼭 기록해두세요!'}))
+    dispatch(setHelpLayout({ description: '지갑이 생성되었어요!\n다음의 복구구문을 꼭 기록해두세요!' }))
+    fetchAccountIds();
   }, [])
+
+  const fetchAccountIds = async() => {
+    const {
+      data: { accounts },
+    } = await getAccountsApi({
+      queryParams: {
+        account: {
+          publicKey: accountKey!.public.toString(),
+        },
+      },
+    });
+    dispatch(setAccountIds(accounts.map((e: any) => e.account)));
+    dispatch(setCurrentAccountId(accounts[0].account));
+  }
 
   const handleCheckMnemonicBtnClick = () => {
     setIsMnemonicRevealed(true);
@@ -38,15 +58,13 @@ function CheckMnemonic() {
               </button>
           </div>
         }
-        복구 구문이 여기로 와야합니다. 복구 구문이 여기로 와야합니다. 복구 구문이 여기로 와야합니다.
-
+        {mnemonic}
       </div>
       <p css={notificationCss}>
         복구 구문은 지갑을 복구할 때 필요한 값이에요.<br/>
         타인과 절대 공유하지 마세요!
       </p>
       <Button onClick={handleOpenWalletBtnClick}>지갑 열기</Button>
-      
     </section>
   );
 };

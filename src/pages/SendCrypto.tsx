@@ -26,7 +26,7 @@ function SendCrypto({}: SendCryptoProps) {
   const [isSendingSuccess, setIsSendingSuccess] = useState(false);
 
   const isBtnDisabled = useMemo(() => {
-    if (isSending || isSendingSuccess) return true;
+    if (isSending) return true;
     if (step === 'INPUT') {
       if (!address || !amount) return true;
     }
@@ -45,6 +45,7 @@ function SendCrypto({}: SendCryptoProps) {
   }
 
   const handleBtnClick = () => {
+    if (isSending || isSendingSuccess) return;
     if (step === 'INPUT') {
       if (!address || !amount) return;
       setStep('CONFIRM');
