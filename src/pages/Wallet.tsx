@@ -4,10 +4,11 @@
 import {css, Theme} from '@emotion/react';
 import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {useAppSelector} from '@/app/store';
+import {useAppDispatch, useAppSelector} from '@/app/store';
 import {AccountBalanceQuery} from '@hashgraph/sdk';
 import {BallTriangle} from 'react-loader-spinner';
 import theme from '@/styles/theme';
+import {setModal} from '@/slices/modalSlice';
 
 interface WalletProps {
   
@@ -18,6 +19,7 @@ type MenuType = 'TRANSACTIONS' | 'SEND';
 function Wallet({}: WalletProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { client, currentAccountId } = useAppSelector(store => store.hedera)
   const [currentMenu, setCurrentMenu] = useState<MenuType>('TRANSACTIONS');
   const [balance, setBalance] = useState('0');
@@ -64,6 +66,10 @@ function Wallet({}: WalletProps) {
   const handleRefreshBtnClick = () => {
     if (isLoading) return;
     fetchBalance()
+  }
+
+  const handleAccountListBtnClick = () => {
+    dispatch(setModal('AccountsModal'));
   }
 
   return (
@@ -113,7 +119,7 @@ function Wallet({}: WalletProps) {
         <Outlet/>
       </main>
       <footer css={footerCss}>
-        <p>
+        <p onClick={handleAccountListBtnClick}>
           {currentAccountId}
           <img width={14} height={7} src="/assets/images/icon-dropdown.png"/>
         </p>

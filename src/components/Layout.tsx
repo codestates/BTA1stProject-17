@@ -1,11 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css, Theme } from '@emotion/react';
 import { Outlet } from 'react-router-dom';
+import Modal from '@/components/Modal';
 
 function Layout() {
   return (
     <div css={layoutCss}>
       <Outlet />
+      <Modal />
     </div>
   );
 }

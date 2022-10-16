@@ -31,7 +31,8 @@ const buttonCss = (theme: Theme) => css`
   }
 
   &:disabled {
-    cursor: none;
+    cursor: default;
+    color: ${theme.color.black600};
   }
 `;
 

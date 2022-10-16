@@ -4,7 +4,7 @@
 /*eslint-disable*/
 
 import {css, Theme} from '@emotion/react';
-import {ChangeEvent, useState} from 'react';
+import {ChangeEvent, useMemo, useState} from 'react';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import theme from '@/styles/theme';
@@ -25,6 +25,14 @@ function SendCrypto({}: SendCryptoProps) {
   const [isSending, setIsSending] = useState(false);
   const [isSendingSuccess, setIsSendingSuccess] = useState(false);
 
+  const isBtnDisabled = useMemo(() => {
+    if (isSending || isSendingSuccess) return true;
+    if (step === 'INPUT') {
+      if (!address || !amount) return true;
+    }
+    return false;
+  }, [amount, address, isSending, isSendingSuccess, step])
+
   const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     setAddress(value);
@@ -38,6 +46,7 @@ function SendCrypto({}: SendCryptoProps) {
 
   const handleBtnClick = () => {
     if (step === 'INPUT') {
+      if (!address || !amount) return;
       setStep('CONFIRM');
       return;
     }
@@ -95,7 +104,10 @@ function SendCrypto({}: SendCryptoProps) {
                       />
                       <span>tℏ</span>
                   </div>
-                  <span> (유효성 검사가 아직 구현되지 않았습니다. 올바른 값을 입력해주세요.)</span>
+                  <p>
+                    - 유효성 검사가 아직 구현되지 않았습니다. 올바른 값을 입력해주세요.<br/>
+                    - 테스트용이기 때문에 tℏ 단위로만 전송 가능합니다.
+                  </p>
 
               </div>
             : <div className='confirm-info'>
@@ -112,7 +124,7 @@ function SendCrypto({}: SendCryptoProps) {
               </div>
         }
       </div>
-      <Button onClick={handleBtnClick} disabled={isSending || isSendingSuccess}>
+      <Button onClick={handleBtnClick} disabled={isBtnDisabled}>
       {
         !isSending
           ? !isSendingSuccess
@@ -161,19 +173,22 @@ const sendCryptoSectionCss = css`
       margin: 0;
     }
     
-    span:last-child {
+    p:last-child {
       font-size: 12px;
-      color: ${theme.color.black200}
+      color: ${theme.color.black200};
+      line-height: 14px;
     }
   }
   
   .amount-input {
     position: relative;
+    
     span {
       position: absolute;
       right: 20px;
       top: 50%;
       transform: translate(0, -50%);
+      color: ${theme.color.black200};
     }
   }
   

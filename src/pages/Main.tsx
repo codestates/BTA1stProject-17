@@ -37,7 +37,7 @@ function Main({}: MainProps) {
     dispatch(setMnemonic(mnemonic.toString()));
     dispatch(setAccountKey({ public: accountPublicKey, private: accountPrivateKey}));
     dispatch(setAccountIds( accounts.map((e: any) => e.account)));
-    dispatch(setCurrentAccountId({ id: accounts[0].account, idx: 0 }));
+    dispatch(setCurrentAccountId(accounts[0].account));
   }
 
   useEffect(() => {

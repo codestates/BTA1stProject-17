@@ -10,7 +10,7 @@ interface HederaState {
   } | null;
   accountIds: string[];
   currentAccountId: string | null;
-  currentAccountIdIdx: number;
+  // currentAccountIdIdx: number;
 }
 
 const initialState: HederaState = {
@@ -19,7 +19,7 @@ const initialState: HederaState = {
   accountKey: null,
   accountIds: [],
   currentAccountId: null,
-  currentAccountIdIdx: 0,
+  // currentAccountIdIdx: 0,
 };
 
 const HederaSlice = createSlice({
@@ -39,8 +39,7 @@ const HederaSlice = createSlice({
       state.accountIds = action.payload;
     },
     setCurrentAccountId(state, action) {
-      state.currentAccountId = action.payload.id;
-      state.currentAccountIdIdx = action.payload.idx;
+      state.currentAccountId = action.payload;
     },
   },
 });
