@@ -8,14 +8,18 @@ interface HederaState {
     public: PublicKey;
     private: PrivateKey;
   } | null;
+  accountIds: string[];
   currentAccountId: string | null;
+  currentAccountIdIdx: number;
 }
 
 const initialState: HederaState = {
   client: null,
   mnemonic: null,
   accountKey: null,
-  currentAccountId: '0.0.48625813',
+  accountIds: [],
+  currentAccountId: null,
+  currentAccountIdIdx: 0,
 };
 
 const HederaSlice = createSlice({
@@ -31,11 +35,15 @@ const HederaSlice = createSlice({
     setAccountKey(state, action) {
       state.accountKey = action.payload;
     },
+    setAccountIds(state, action) {
+      state.accountIds = action.payload;
+    },
     setCurrentAccountId(state, action) {
-      state.currentAccountId = action.payload;
+      state.currentAccountId = action.payload.id;
+      state.currentAccountIdIdx = action.payload.idx;
     },
   },
 });
 
-export const { setClient, setMnemonic, setAccountKey, setCurrentAccountId } = HederaSlice.actions;
+export const { setClient, setMnemonic, setAccountKey, setCurrentAccountId, setAccountIds } = HederaSlice.actions;
 export default HederaSlice.reducer;

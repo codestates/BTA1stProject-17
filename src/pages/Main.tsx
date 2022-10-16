@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/store';
 import { useLazyGetAccountsQuery } from '@/api';
 import { Client, Mnemonic } from '@hashgraph/sdk';
-import { setAccountKey, setClient, setMnemonic } from '@/slices/hederaSlice';
+import { setAccountIds, setAccountKey, setClient, setCurrentAccountId, setMnemonic } from '@/slices/hederaSlice';
 import { useEffect } from 'react';
 
 // TODO: 작업 완료 후 린트 활성화
@@ -25,18 +25,19 @@ function Main({}: MainProps) {
     const accountPrivateKey = await mnemonic.toEd25519PrivateKey('1234');
     const accountPublicKey = accountPrivateKey.publicKey;
 
-    const { data: accounts } = await getAccountsApi({
+    const { data: { accounts } } = await getAccountsApi({
       queryParams: {
         account: {
           publicKey: accountPublicKey.toString()
         }
       }
     })
-    console.log(accounts);
 
     dispatch(setClient(client));
     dispatch(setMnemonic(mnemonic.toString()));
     dispatch(setAccountKey({ public: accountPublicKey, private: accountPrivateKey}));
+    dispatch(setAccountIds( accounts.map((e: any) => e.account)));
+    dispatch(setCurrentAccountId({ id: accounts[0].account, idx: 0 }));
   }
 
   useEffect(() => {
