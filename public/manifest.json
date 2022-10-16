@@ -1,0 +1,14 @@
+{
+  "name": "Hedera Hastag",
+  "description": "Hedera Hashtag (HBAR) Wallet",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "icons": {
+    "128": "logo.png"
+  },
+  "permissions": [],
+  "action": {
+    "default_icon": "logo.png",
+    "default_popup": "index.html"
+  }
+}
