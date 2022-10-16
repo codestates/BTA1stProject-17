@@ -6,6 +6,8 @@ import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {useAppSelector} from '@/app/store';
 import {AccountBalanceQuery} from '@hashgraph/sdk';
+import {BallTriangle} from 'react-loader-spinner';
+import theme from '@/styles/theme';
 
 interface WalletProps {
   
@@ -19,6 +21,7 @@ function Wallet({}: WalletProps) {
   const { client, currentAccountId } = useAppSelector(store => store.hedera)
   const [currentMenu, setCurrentMenu] = useState<MenuType>('TRANSACTIONS');
   const [balance, setBalance] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (location.pathname === '/wallet') {
@@ -27,15 +30,23 @@ function Wallet({}: WalletProps) {
   }, [])
 
   useEffect(() => {
-    (async() => {
-      if (client && currentAccountId) {
+    fetchBalance()
+  }, [client, currentAccountId])
+
+  const fetchBalance = async () => {
+    if (client && currentAccountId) {
+      setIsLoading(true);
+      try {
         const accountIdBalanceQuery = new AccountBalanceQuery()
           .setAccountId(currentAccountId)
         const { hbars } = await accountIdBalanceQuery.execute(client);
         setBalance(hbars.toString());
+      } catch (e) {
+        alert('지갑 보유 밸런스를 불러오는데 실패했습니다. 다시 불러와주세요.');
       }
-    })()
-  }, [client && currentAccountId])
+      setIsLoading(false);
+    }
+  }
 
 
   const handleMenuBtnClick = (type: MenuType) => {
@@ -50,6 +61,11 @@ function Wallet({}: WalletProps) {
     }
   }
 
+  const handleRefreshBtnClick = () => {
+    if (isLoading) return;
+    fetchBalance()
+  }
+
   return (
     <>
       <header css={walletHeaderCss}>
@@ -59,7 +75,23 @@ function Wallet({}: WalletProps) {
       <section css={coinBoardCss}>
         <figure css={hederaLogoWrapCss}/>
         <div css={coinAmountCss}>
-          <p className='amount'>{balance}</p>
+          <p className='amount'>
+            {
+              isLoading
+                ? <BallTriangle ariaLabel="loading-indicator" color={theme.color.white} width={30} height={30} />
+                : <>
+                    <span>{balance}</span>
+                    <img
+                      width={19}
+                      height={19}
+                      src='/assets/images/icon-refresh.png'
+                      alt='refresh'
+                      onClick={handleRefreshBtnClick}
+                    />
+                  </>
+            }
+
+          </p>
           <p className='description'>Hedera Hashgraph</p>
         </div>
         <div css={menuCss}>
@@ -117,8 +149,21 @@ const coinAmountCss = (theme: Theme) => css`
   gap: 10px;
   
   .amount {
+    width: 100%;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     font-family: 'Inter-Medium';
     font-size: 32px;
+    
+    img {
+      position: absolute;
+      right: 20px;
+      top: -50px;
+      cursor: pointer;
+    }
   }
   
   .description {

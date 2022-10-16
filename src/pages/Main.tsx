@@ -36,7 +36,7 @@ function Main({}: MainProps) {
 
     dispatch(setClient(client));
     dispatch(setMnemonic(mnemonic.toString()));
-    dispatch(setAccountKey({ public: accountPublicKey.toString(), private: accountPrivateKey.toString()}));
+    dispatch(setAccountKey({ public: accountPublicKey, private: accountPrivateKey}));
   }
 
   useEffect(() => {

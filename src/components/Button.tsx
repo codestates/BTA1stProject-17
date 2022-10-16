@@ -5,11 +5,15 @@ import { css, Theme } from '@emotion/react';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 function Button({ ...props }: ButtonProps) {
-  return <button css={buttonCss} {...props} />;
+  return (
+    <button css={buttonCss} {...props}>
+      {props.children}
+    </button>
+  );
 }
 
 const buttonCss = (theme: Theme) => css`
-  dispaly: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -22,8 +26,12 @@ const buttonCss = (theme: Theme) => css`
   font-size: 20px;
   color: ${theme.color.white};
 
-  &:hover {
+  &:enabled:hover {
     background-color: ${theme.color.black400};
+  }
+
+  &:disabled {
+    cursor: none;
   }
 `;
 

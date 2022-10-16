@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Client } from '@hashgraph/sdk';
+import { Client, PrivateKey, PublicKey } from '@hashgraph/sdk';
 
 interface HederaState {
   client: Client | null;
   mnemonic: string | null;
   accountKey: {
-    public: string;
-    private: string;
+    public: PublicKey;
+    private: PrivateKey;
   } | null;
   currentAccountId: string | null;
 }
