@@ -28,7 +28,7 @@ function HelpLayout() {
         <img src="/assets/images/logo-white-big.png" />
         <p>{description}</p>
       </section>
-      <main>
+      <main css={helpMainCss}>
         <Outlet />
       </main>
     </>
@@ -72,6 +72,11 @@ const helpHeaderDescriptionSectionCss = (theme: Theme) => css`
     white-space: pre-wrap;
     height: 60px;
   }
+`;
+
+const helpMainCss = css`
+  width: 100%;
+  height: 245px;
 `;
 
 export default HelpLayout;

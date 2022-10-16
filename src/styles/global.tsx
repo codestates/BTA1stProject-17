@@ -155,6 +155,7 @@ const style = css`
     border: none;
     outline: none;
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0);
   }
 
   span {
