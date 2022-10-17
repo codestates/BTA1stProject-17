@@ -40,6 +40,8 @@ SECRET_KEY={해시에 사용할 값}
 <br/>
 
 ### 4. Useful Links
+- [Hedera Hashtag Figma](
+https://www.figma.com/file/50gwqyHNO7SyoIV83W5z7Q/Untitled?node-id=5%3A2) : 프로젝트 디자인 피그마
 - [Hedera Docs](https://docs.hedera.com/guides/) : 헤데라 공식 docs
 - [Hedera Portal](https://portal.hedera.com/) : 헤데라 테스트넷 계정 관리 페이지
 - [Hashscan](https://hashscan.io/) : 트랜잭션 탐색 페이지
